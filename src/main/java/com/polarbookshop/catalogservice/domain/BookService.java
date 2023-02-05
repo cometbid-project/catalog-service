@@ -3,8 +3,6 @@
  */
 package com.polarbookshop.catalogservice.domain;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 import com.polarbookshop.catalogservice.exception.BookAlreadyExistsException;
@@ -72,6 +70,7 @@ public class BookService {
      * @return
      */
     public Book editBookDetails(String isbn, Book book) {
+      
 		return bookRepository.findByIsbn(isbn)
 				.map(existingBook -> {
 					var bookToUpdate = BookMapper.editBook(existingBook, book);

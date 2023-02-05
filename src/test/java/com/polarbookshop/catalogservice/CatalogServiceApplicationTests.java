@@ -35,7 +35,7 @@ class CatalogServiceApplicationTests {
 	                .returnResult()
 	                .getResponseBody();
 
-	        webTestClient
+	         webTestClient
 	                .get()
 	                .uri("/books/" + bookIsbn)
 	                .exchange()
