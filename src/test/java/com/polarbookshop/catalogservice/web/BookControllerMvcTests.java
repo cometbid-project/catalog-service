@@ -3,7 +3,6 @@
  */
 package com.polarbookshop.catalogservice.web;
 
-import com.polarbookshop.catalogservice.exception.BookAlreadyExistsException;
 import com.polarbookshop.catalogservice.exception.BookNotFoundException;
 import com.polarbookshop.catalogservice.domain.BookService;
 import org.junit.jupiter.api.Test;

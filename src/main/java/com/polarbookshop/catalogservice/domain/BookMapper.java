@@ -12,12 +12,12 @@ import java.util.UUID;
 class BookMapper {
 
 	static Book createBook(Book newBook) {		
-		return new Book(
-				UUID.randomUUID().toString(),
+		return Book.of(
 				newBook.isbn(),
 				newBook.title(),
 				newBook.author(),
-				newBook.price());
+				newBook.price(),
+				newBook.publisher());  
 	}
 	
 	static Book editBook(Book existingBook, Book book) {
@@ -26,6 +26,10 @@ class BookMapper {
 				existingBook.isbn(),
 				book.title(),
 				book.author(),
-				book.price());
+				book.price(),
+				book.publisher(),
+				existingBook.createdDate(),
+                existingBook.lastModifiedDate(),
+				existingBook.version());
 	}
 }
