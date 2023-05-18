@@ -1,20 +1,24 @@
 # OS Identification
 #gradlew = "./gradlew"
+mvnw = "./mvnw"
 expected_ref = "$EXPECTED_REF"
 if os.name == "nt":
   #gradlew = "gradlew.bat"
+  mvnw = "mvnw"
   expected_ref = "%EXPECTED_REF%"
   
 # Build
 custom_build(
     # Name of the container image
     ref = 'catalog-service',
-    # Command to build the container image
-    command = 'mvnw spring-boot:build-image -DskipTests=true -Dspring-boot.build-image.imageName=' + expected_ref,	
-	# Command import image into local cluster
-	command = 'minikube image load ' + ref + ' --profile polar'
-    # Files to watch that trigger a new build
+	# Command to build the container image
+    command = mvnw + ' spring-boot:build-image -DskipTests=true -Dspring-boot.build-image.imageName=' + expected_ref,
+	# Files to watch that trigger a new build
     deps = ['pom.xml', 'src']
+    # Command to build the container image
+    # command = gradlew + ' bootBuildImage --imageName ' + expected_ref,
+    # Files to watch that trigger a new build
+    # deps = ['build.gradle', 'src']
 )
 
 # Deploy
