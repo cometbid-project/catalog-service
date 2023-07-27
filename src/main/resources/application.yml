@@ -12,6 +12,7 @@ spring.profiles.active: testdata
 spring:
   application:
     name: catalog-service
+  #profiles.active: dev
   lifecycle:
     timeout-per-shutdown-phase: 15s
   config:
@@ -42,7 +43,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh
+        include: refresh #enables /actuator/refresh endpoint
 
 polar:
   greeting: Welcome to the local book catalog!
