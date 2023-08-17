@@ -17,8 +17,26 @@
 	<description>Provides functionality for managing the books in the catalog.</description>
 	<properties>
 		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<test-container.version>1.18.3</test-container.version>
 		<spring-cloud.version>2021.0.5</spring-cloud.version>
-		<test-container-version>1.17.3</test-container-version>
+		<!-- JaCoCo Properties -->
+		<jacoco.version>0.8.8</jacoco.version>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.junit.reportsPath>${project.basedir}/../target/</sonar.junit.reportsPath>
+		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.tests>${project.basedir}/src/test/</sonar.tests>
+		<sonar.host.url>http://localhost:9000/</sonar.host.url>
+		<sonar.plugin.version>9.4.0.54424</sonar.plugin.version>
+		<sonar.language>java</sonar.language>
+		<sonar.exclusions>
+			**/CatalogServiceApplication.java,
+			**/config/*.java
+		</sonar.exclusions>
+		<!--/ JaCoCo Properties -->
 		<spring-boot.build-image.imageName>catalog-service:1.0.0</spring-boot.build-image.imageName>
 	</properties>
 
@@ -93,7 +111,7 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
+		<dependency>  
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
@@ -126,7 +144,7 @@
 			<dependency>
 				<groupId>org.testcontainers</groupId>
 				<artifactId>testcontainers-bom</artifactId>
-				<version>${test-container-version}</version>
+				<version>${test-container.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -146,19 +164,85 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<!--  
-					<image>
-						<builder>gcr.io/buildpacks/builder:v1</builder>
-						<env>
-							<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-							<BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
-						</env>						
-					</image>
+					<!-- Make sure `mvn spring-boot:build-image` uses the Java version defined in this project -->
+                    <image>
+                        <env>
+                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                        </env>
+                    </image>
+					<!--
 					<layers>
 						<enabled>true</enabled>
 					</layers>
 					-->
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>*MethodAccess</exclude>
+						<exclude>**/config/*.*</exclude>
+						<exclude>com.polarbookshop.catalogservice/config/*.*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<limits>
+										<limit>
+											<counter>INSTRUCTION</counter>
+											<minimum>60.0%</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-audit-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<haltOnFailure>false</haltOnFailure>
+							<rules>
+								<rule>
+									<limits>
+										<limit>
+											<counter>INSTRUCTION</counter>
+											<minimum>60.0%</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jacoco-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-site</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -28,7 +28,7 @@ class CatalogServiceApplicationTests {
 	        Book expectedBook = webTestClient
 	                .post()
 	                .uri("/books")
-	                .bodyValue(bookToCreate)
+	                .bodyValue(bookToCreate)  
 	                .exchange()
 	                .expectStatus().isCreated()
 	                .expectBody(Book.class).value(book -> assertThat(book).isNotNull())
