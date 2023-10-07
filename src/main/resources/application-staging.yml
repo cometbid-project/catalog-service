@@ -1,0 +1,3 @@
+logging: 
+  file.name: prod-stag-log.log
+  level.root: INFO

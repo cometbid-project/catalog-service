@@ -1,0 +1,3 @@
+logging: 
+  file.name: prod-app-log.log
+  level.root: INFO
